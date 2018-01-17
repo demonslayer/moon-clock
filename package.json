@@ -1,0 +1,17 @@
+{
+  "fitbit": {
+    "appUUID": "c1d378f2-9531-41c9-86ab-986f8952c6ae",
+    "appType": "clockface",
+    "appDisplayName": "moon clock",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "",
+    "requestedPermissions": [
+      "access_activity"
+    ],
+    "i18n": {
+      "en": {
+        "name": "moon clock"
+      }
+    }
+  }
+}

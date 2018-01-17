@@ -1,0 +1,39 @@
+<svg viewport-fill="black">
+  
+  <defs>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="import" href="/mnt/sysassets/widgets_common.gui" />
+    <!-- Additional Imports -->
+    <link rel="import" href="/mnt/sysassets/widgets/push_button_widget.gui" />
+  </defs>
+  
+  <image href="fullmoon.png" />
+  
+  <rect x="0" y="0" width="100%" height="100%" opacity="0.5" fill="black" />
+  
+  <g id="secs" pointer-events="visible" transform="translate(50%,50%)">
+    <rect x="$-2" y="-120" width="3" height="120" fill="silver" />
+  </g>
+  <g id="mins" pointer-events="visible" transform="translate(50%,50%)">
+    <rect x="$-4" y="-110" width="4" height="110" fill="silver" />
+  </g>
+  <g id="hours" pointer-events="visible" transform="translate(50%,50%)">
+    <rect x="$-6" y="-75" width="5" height="75" fill="silver" />
+  </g>
+
+  <circle cx="50%" cy="50%" r="8" fill="silver" />
+  
+  <text id="dateLabel" x="50%" y="85%" text-anchor="middle"
+    font-family="System-Regular" fill="silver" font-size="40">######### ## ####</text>
+  
+  <text id="stepsLabel" x="50%" y="15%" text-anchor="middle"
+    font-family="System-Regular" fill="silver" font-size="40">Steps: ######</text>
+  
+  <use id="hiddenButton" href="#push-button"
+    fill="fb-red" opacity="0" font-family="System-Regular" font-size="40">
+    <set href="#text" attributeName="text-buffer" to="Click Me!" />
+    <set href="#text" attributeName="fill" to="fb-peach" />
+    <set href="#text" attributeName="y" to="12" />
+  </use>
+  
+</svg>
