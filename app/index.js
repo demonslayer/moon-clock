@@ -1,6 +1,8 @@
 import clock from "clock";
 import document from "document";
 import { today } from "user-activity";
+import { HeartRateSensor } from "heart-rate";
+
 
 import * as util from "../common/utils";
 
@@ -10,6 +12,7 @@ let hourHand = document.getElementById("hours");
 let minHand = document.getElementById("mins");
 let secHand = document.getElementById("secs");
 let dateLabel = document.getElementById("dateLabel");
+let hrLabel = document.getElementById("hrLabel");
 
 let hiddenButton = document.getElementById("hiddenButton");
 let stepsLabel = document.getElementById("stepsLabel");
@@ -47,19 +50,32 @@ function updateClock() {
 
 hiddenButton.onactivate = function(evt) {
   stepsLabel.text = `Steps: ${today.local.steps}`
-  stepsLabel.style.display = "inline";
+  util.showElement(stepsLabel);
   
-  dateLabel.style.display = "inline";
   dateLabel.text = `${util.getMonth()} ${day.getDate()} ${day.getFullYear()}`;
+  util.showElement(dateLabel);
+  
+  util.showElement(hrLabel)
   
   setTimeout(function() {
-    stepsLabel.style.display = "none";
-    dateLabel.style.display = "none";
+    util.hideElement(stepsLabel);
+    util.hideElement(dateLabel);
+    util.hideElement(hrLabel);
   }, 2000);
 }
 
-stepsLabel.style.display = "none";
-dateLabel.style.display = "none";
+util.hideElement(stepsLabel);
+util.hideElement(dateLabel);
+util.hideElement(hrLabel);
 
 // Update the clock every tick event
 clock.ontick = () => updateClock();
+
+// update the heart rate sensor
+var hrm = new HeartRateSensor();
+
+hrm.onreading = function() {
+  hrLabel.text = `Heart Rate: ${hrm.heartRate}`;
+}
+
+hrm.start();

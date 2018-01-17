@@ -14,3 +14,11 @@ export function getMonth() {
   let month = MONTH_NAMES[today.getMonth()];
   return month;
 }
+
+export function showElement(element) {
+  element.style.display = "inline";
+}
+
+export function hideElement(element) {
+  element.style.display  = "none";
+}
