@@ -1,81 +1,89 @@
-import clock from "clock";
-import document from "document";
-import { today } from "user-activity";
-import { HeartRateSensor } from "heart-rate";
+'use strict';
 
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-import * as util from "../common/utils";
+var clock = _interopDefault(require('clock'));
+var document = _interopDefault(require('document'));
+var userActivity = require('user-activity');
+var heartRate = require('heart-rate');
+
+var MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+function getMonth() {
+    var today$$1 = new Date();
+    var month = MONTH_NAMES[today$$1.getMonth()];
+    return month;
+}
+function showElement(element) {
+    element.style.display = "inline";
+}
+function hideElement(element) {
+    element.style.display = "none";
+}
+function calculateMoonPhase(date) {
+    var lp = 2551443;
+    var new_moon = new Date(1970, 0, 7, 20, 35, 0);
+    var phase = ((date.getTime() - new_moon.getTime()) / 1000) % lp;
+    return Math.floor(phase / (24 * 3600)) + 1;
+}
 
 clock.granularity = "seconds";
-
-let hourHand = document.getElementById("hours");
-let minHand = document.getElementById("mins");
-let secHand = document.getElementById("secs");
-let dateLabel = document.getElementById("dateLabel");
-let hrLabel = document.getElementById("hrLabel");
-
-let hiddenButton = document.getElementById("hiddenButton");
-let stepsLabel = document.getElementById("stepsLabel");
-
-let day = new Date();
-
-// Returns an angle (0-360) for the current hour in the day, including minutes
+var hourHand = document.getElementById("hours");
+var minHand = document.getElementById("mins");
+var secHand = document.getElementById("secs");
+var dateLabel = document.getElementById("dateLabel");
+var hrLabel = document.getElementById("hrLabel");
+var moonPhaseImage = document.getElementById("moonPhase");
+var hiddenButton = document.getElementById("hiddenButton");
+var stepsLabel = document.getElementById("stepsLabel");
+var day = new Date();
+var moonPhase;
 function hoursToAngle(hours, minutes) {
-  let hourAngle = (360 / 12) * hours;
-  let minAngle = (360 / 12 / 60) * minutes;
-  return hourAngle + minAngle;
+    var hourAngle = (360 / 12) * hours;
+    var minAngle = (360 / 12 / 60) * minutes;
+    return hourAngle + minAngle;
 }
-
-// Returns an angle (0-360) for minutes
 function minutesToAngle(minutes) {
-  return (360 / 60) * minutes;
+    return (360 / 60) * minutes;
 }
-
-// Returns an angle (0-360) for seconds
 function secondsToAngle(seconds) {
-  return (360 / 60) * seconds;
+    return (360 / 60) * seconds;
 }
-
-// Rotate the hands every tick
 function updateClock() {
-  day = new Date();
-  let hours = day.getHours() % 12;
-  let mins = day.getMinutes();
-  let secs = day.getSeconds();
-
-  hourHand.groupTransform.rotate.angle = hoursToAngle(hours, mins);
-  minHand.groupTransform.rotate.angle = minutesToAngle(mins);
-  secHand.groupTransform.rotate.angle = secondsToAngle(secs);
+    day = new Date();
+    var hours = day.getHours() % 12;
+    var minutes = day.getMinutes();
+    var seconds = day.getSeconds();
+    hourHand.groupTransform.rotate.angle = hoursToAngle(hours, minutes);
+    minHand.groupTransform.rotate.angle = minutesToAngle(minutes);
+    secHand.groupTransform.rotate.angle = secondsToAngle(seconds);
+    console.log("hours: " + hours + " minutes: " + minutes + " seconds: " + seconds);
+    if (moonPhase == undefined || (hours == 12 && minutes == 0 && seconds == 0)) {
+        moonPhase = calculateMoonPhase(day);
+        console.log("recalculated moon phase. moon phase is " + moonPhase);
+        if (moonPhase < 29) {
+            moonPhaseImage.href = "moon-" + moonPhase + ".png";
+        }
+    }
 }
-
-hiddenButton.onactivate = function(evt) {
-  stepsLabel.text = `Steps: ${today.local.steps}`
-  util.showElement(stepsLabel);
-  
-  dateLabel.text = `${util.getMonth()} ${day.getDate()} ${day.getFullYear()}`;
-  util.showElement(dateLabel);
-  
-  util.showElement(hrLabel)
-  
-  setTimeout(function() {
-    util.hideElement(stepsLabel);
-    util.hideElement(dateLabel);
-    util.hideElement(hrLabel);
-  }, 2000);
-}
-
-util.hideElement(stepsLabel);
-util.hideElement(dateLabel);
-util.hideElement(hrLabel);
-
-// Update the clock every tick event
-clock.ontick = () => updateClock();
-
-// update the heart rate sensor
-var hrm = new HeartRateSensor();
-
-hrm.onreading = function() {
-  hrLabel.text = `Heart Rate: ${hrm.heartRate}`;
-}
-
+hiddenButton.onactivate = function (evt) {
+    stepsLabel.text = "Steps: " + userActivity.today.local.steps;
+    showElement(stepsLabel);
+    dateLabel.text = getMonth() + " " + day.getDate() + " " + day.getFullYear();
+    showElement(dateLabel);
+    showElement(hrLabel);
+    setTimeout(function () {
+        hideElement(stepsLabel);
+        hideElement(dateLabel);
+        hideElement(hrLabel);
+    }, 2000);
+};
+hideElement(stepsLabel);
+hideElement(dateLabel);
+hideElement(hrLabel);
+clock.ontick = function () { return updateClock(); };
+var hrm = new heartRate.HeartRateSensor();
+hrm.onreading = function () {
+    hrLabel.text = "Heart Rate: " + hrm.heartRate;
+};
 hrm.start();

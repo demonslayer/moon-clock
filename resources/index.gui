@@ -7,7 +7,7 @@
     <link rel="import" href="/mnt/sysassets/widgets/push_button_widget.gui" />
   </defs>
   
-  <image href="fullmoon.png" />
+  <image id="moonPhase" href="newmoon.png" />
   
   <g id="secs" pointer-events="visible" transform="translate(50%,50%)">
     <rect x="$-2" y="-120" width="3" height="120" fill="gray" />
