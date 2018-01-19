@@ -38,6 +38,7 @@ var hiddenButton = document.getElementById("hiddenButton");
 var stepsLabel = document.getElementById("stepsLabel");
 var day = new Date();
 var moonPhase;
+var lastUpdated;
 function hoursToAngle(hours, minutes) {
     var hourAngle = (360 / 12) * hours;
     var minAngle = (360 / 12 / 60) * minutes;
@@ -57,9 +58,9 @@ function updateClock() {
     hourHand.groupTransform.rotate.angle = hoursToAngle(hours, minutes);
     minHand.groupTransform.rotate.angle = minutesToAngle(minutes);
     secHand.groupTransform.rotate.angle = secondsToAngle(seconds);
-    console.log("hours: " + hours + " minutes: " + minutes + " seconds: " + seconds);
-    if (moonPhase == undefined || (hours == 12 && minutes == 0 && seconds == 0)) {
+    if (moonPhase == undefined || day.getDate() > lastUpdated.getDate() || day.getMonth() > lastUpdated.getMonth()) {
         moonPhase = calculateMoonPhase(day);
+        lastUpdated = day;
         console.log("recalculated moon phase. moon phase is " + moonPhase);
         if (moonPhase < 29) {
             moonPhaseImage.href = "moon-" + moonPhase + ".png";
